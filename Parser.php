@@ -321,6 +321,7 @@ class Parser
 
             fclose($file);
         }
+        $this->tldList['content'] = array_merge_recursive($this->tldList['content'], $this->customDomains);
 
         $this->loaded = true;
     }
@@ -395,7 +396,6 @@ class Parser
 
         // merge list and sort tlds by length within its group
         $this->tldList['content'] = array_merge_recursive($tlds, $additional);
-        $this->tldList['content'] = array_merge_recursive($tlds, $this->customDomains);
 
         foreach ($this->tldList['content'] as $tldGroup => $tld) {
             usort($tld, function ($a, $b)
