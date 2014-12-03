@@ -127,6 +127,15 @@ class Parser
      */
     protected $path;
 
+
+    /**
+     * Custom list of additional domain groups / tlds
+     *
+     * @var array
+     */
+    protected $customDomains = array();
+
+
     /**
      * Creates a DomainParser object
      *
@@ -386,6 +395,7 @@ class Parser
 
         // merge list and sort tlds by length within its group
         $this->tldList['content'] = array_merge_recursive($tlds, $additional);
+        $this->tldList['content'] = array_merge_recursive($tlds, $this->customDomains);
 
         foreach ($this->tldList['content'] as $tldGroup => $tld) {
             usort($tld, function ($a, $b)
@@ -465,5 +475,29 @@ class Parser
     public function cacheTime($cacheTime = 432000)
     {
         $this->cacheTime = filter_var($cacheTime, FILTER_VALIDATE_INT);
+    }
+
+
+    /**
+     * Add a custom domain group. This will override the built-in domain groups.
+     *
+     * @param string $groupName
+     * @param array $tldList
+     */
+    public function addCustomDomainGroup($groupName, array $tldList)
+    {
+        $this->customDomains[$groupName] = $tldList;
+    }
+
+
+    /**
+     * Set the custom domain groups. The array should be in the same format as in Additional.php.
+     * These will override the built-in domain groups
+     *
+     * @param array $domainGroups Array of domain groups and their tld lists
+     */
+    public function setCustomDomainGroups(array $domainGroups)
+    {
+        $this->customDomains = $domainGroups;
     }
 }
