@@ -52,4 +52,10 @@ $additional = array(
                 'qc.com', 'ru.com', 'sa.com', 'se.com', 'se.net', 'uk.com', 'uk.net', 'us.com', 
                 'us.org', 'uy.com', 'za.com', 'com.de'), 'de.vu' => array('de.vu'), 
         'co.cc' => array(), 'com.cc' => array('com.cc'), 'org.cc' => array('org.cc'), 
-        'edu.cc' => array('edu.cc'), 'net.cc' => array('net.cc'));
+        'edu.cc' => array('edu.cc'), 'net.cc' => array('net.cc'),
+    'venez' => array(
+        '0rg.fr', '1s.fr', 'ass0.fr', 'be.ma', 'c0m.at', 'c4.fr', 'ch.ma', 'fr.ht', 'fr.mu',
+        'gaming.cx', 'ht.cx', 'lachezvos.com', 'laschezvoscoms.com', 'no-ip.be', 'no-ip.fr',
+        'qc.cx', 'sarl.tk', 'venez.fr', 'viens.la', 'vu.cx', 'x-plosif.com', 'xl.cx', 'ze.tc', 'zik.dj',
+    ),
+);
