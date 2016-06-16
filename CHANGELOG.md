@@ -1,3 +1,6 @@
+### 2.0.8 (Jun 17, 2016)
+* revert Idna.php back
+
 ### 2.0.6 (Jun 16, 2016)
 * replace Idna.php to mso/idna-convert package
 * change public suffixes url to publicsuffix.org 

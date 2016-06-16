@@ -25,6 +25,11 @@
 namespace Novutec\DomainParser;
 
 /**
+ * @see Idna
+ */
+require_once __DIR__.'/Idna.php';
+
+/**
  * @see DomainParserResult
  */
 require_once __DIR__.'/Result.php';
@@ -194,7 +199,7 @@ class Parser
             $matchedGroup = '';
             $validHostname = true;
 
-            $IdnaConverter = new \Mso\IdnaConvert\IdnaConvert(array('idn_version' => 2008));
+            $IdnaConverter = new Idna(array('idn_version' => 2008));
 
             preg_match('/^((http|https|ftp|ftps|news|ssh|sftp|gopher):[\/]{2,})?([^\/]+)/', mb_strtolower(trim($unparsedString), $this->encoding), $matches);
             $parsedString = $IdnaConverter->encode(end($matches));
@@ -240,9 +245,9 @@ class Parser
                 $matchedDomainIdn = $IdnaConverter->encode($matchedDomain);
                 $matchedTld = $matchedTldIdn = $defaultTld;
             } elseif ($matchedDomain != '' && strlen($matchedDomainIdn) <= 63 && $matchedTld != '') {
-                //$matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function () use (&$validHostname) {
-                //    $validHostname = false;
-                //}, $IdnaConverter->encode($matchedDomain)));
+                $matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function () use (&$validHostname) {
+                    $validHostname = false;
+                }, $IdnaConverter->encode($matchedDomain)));
                 $matchedDomainIdn = $IdnaConverter->encode($matchedDomain);
             } elseif ($matchedDomain == '' && $matchedTld != '') {
                 $validHostname = false;
@@ -337,7 +342,7 @@ class Parser
             return;
         }
 
-        $IdnaConverter = new \Mso\IdnaConvert\IdnaConvert(array('idn_version' => 2008));
+        $IdnaConverter = new Idna(array('idn_version' => 2008));
 
         // only match official ICANN domain tlds
         if (preg_match('/\/\/ ===BEGIN ICANN DOMAINS===(.*)(?=\/\/ ===END ICANN DOMAINS===)/s', $content, $matches) !== 1) {
