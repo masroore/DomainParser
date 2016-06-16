@@ -1,6 +1,6 @@
 <?php
 /**
- * Novutec Domain Tools
+ * Novutec Domain Tools.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -25,23 +25,21 @@
 namespace Novutec\DomainParser;
 
 /**
- * AbstractException
+ * AbstractException.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
 abstract class AbstractException extends \Exception
 {
-
     /**
-     * Creates an exception object
+     * Creates an exception object.
      * 
-     * @param  string $message
-     * @param  integer $code
-     * @param  Exception $previous
-     * @return void
+     * @param string    $message
+     * @param int       $code
+     * @param Exception $previous
      */
     public function __construct($message = '', $code = 0, Exception $previous = null)
     {
@@ -49,23 +47,26 @@ abstract class AbstractException extends \Exception
     }
 
     /**
-     * Creates an exception object
+     * Creates an exception object.
      *
-     * @param  string $type
-     * @param  string $message
-     * @param  integer $code
-     * @param  Exception $previous
+     * @param string    $type
+     * @param string    $message
+     * @param int       $code
+     * @param Exception $previous
+     *
      * @return mixed
      */
     public static function factory($type = '', $message = '', $code = 0, Exception $previous = null)
     {
-        if (file_exists(__DIR__ . '/' . ucfirst($type) . 'Exception.php')) {
-            include_once __DIR__ . '/' . ucfirst($type) . 'Exception.php';
-            $classname = 'Novutec\DomainParser\\' . ucfirst($type) . 'Exception';
+        if (file_exists(__DIR__.'/'.ucfirst($type).'Exception.php')) {
+            include_once __DIR__.'/'.ucfirst($type).'Exception.php';
+            $classname = 'Novutec\DomainParser\\'.ucfirst($type).'Exception';
+
             return new $classname($message, $code, $previous);
         } else {
-            include_once __DIR__ . '/Exception.php';
+            include_once __DIR__.'/Exception.php';
             $classname = 'Novutec\DomainParser\Exception';
+
             return new $classname($message, $code, $previous);
         }
     }

@@ -1,6 +1,6 @@
 <?php
 /**
- * Novutec Domain Tools
+ * Novutec Domain Tools.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -25,102 +25,92 @@
 namespace Novutec\DomainParser;
 
 /**
- * DomainParserResult
+ * DomainParserResult.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
 class Result
 {
-
     /**
-     * Fully qualified domain name
+     * Fully qualified domain name.
      *
      * @var string
-     * @access protected
      */
     protected $fqdn;
 
     /**
-     * IDN fully qualified domain name
+     * IDN fully qualified domain name.
      *
      * @var string
-     * @access protected
      */
     protected $idnFqdn;
 
     /**
-     * Domain name
+     * Domain name.
      * 
      * @var string
-     * @access protected
      */
     protected $domain;
 
     /**
-     * Domain name IDN converted
+     * Domain name IDN converted.
      *
      * @var string
-     * @access protected
      */
     protected $idnDomain;
 
     /**
-     * Top-level domain name
+     * Top-level domain name.
      *
      * @var string
-     * @access protected
      */
     protected $tld;
 
     /**
-     * Top-level domain name IDN converted
+     * Top-level domain name IDN converted.
      *
      * @var string
-     * @access protected
      */
     protected $idnTld;
 
     /**
-     * Group name of top-level domain name
+     * Group name of top-level domain name.
      * 
      * @var string
-     * @access protected
      */
     protected $tldGroup;
 
     /**
-     * Is the hostname valid
+     * Is the hostname valid.
      * 
-     * @var boolean
-     * @access protected
+     * @var bool
      */
     protected $validHostname;
 
     /**
-     * Constructs a new object from parsed domain name by DomainParser
+     * Constructs a new object from parsed domain name by DomainParser.
      * 
-     * @param  string $domain
-     * @param  string $idnDomain
-     * @param  string $tld
-     * @param  string $idnTld
-     * @param  string $tldGroup
-     * @param  boolean $validHostname
-     * @return void
+     * @param string $domain
+     * @param string $idnDomain
+     * @param string $tld
+     * @param string $idnTld
+     * @param string $tldGroup
+     * @param bool   $validHostname
      */
-    public function __construct($domain = '', $idnDomain = '', $tld = '', $idnTld = '', $tldGroup = '', 
+    public function __construct($domain = '', $idnDomain = '', $tld = '', $idnTld = '', $tldGroup = '',
             $validHostname = false)
     {
         if ($domain != '' && $tld != '') {
-            $this->fqdn = $domain . '.' . $tld;
+            $this->fqdn = $domain.'.'.$tld;
         }
-        
+
         if ($idnDomain != '' && $idnTld != '') {
-            $this->idnFqdn = $idnDomain . '.' . $idnTld;
+            $this->idnFqdn = $idnDomain.'.'.$idnTld;
         }
-        
+
         $this->domain = $domain;
         $this->idnDomain = $idnDomain;
         $this->tld = $tld;
@@ -130,47 +120,47 @@ class Result
     }
 
     /**
-	 * Writing data to properties
-	 *
-	 * @param  string $name
-	 * @param  mixed $value
-	 * @return void
-	 */
+     * Writing data to properties.
+     *
+     * @param string $name
+     * @param mixed  $value
+     */
     public function __set($name, $value)
     {
         $this->{$name} = $value;
     }
 
     /**
-	 * Checking data
-	 *
-	 * @param  mixed $name
-	 * @return boolean
-	 */
+     * Checking data.
+     *
+     * @param mixed $name
+     *
+     * @return bool
+     */
     public function __isset($name)
     {
         return isset($this->{$name});
     }
 
     /**
-	 * Reading data from properties
-	 *
-	 * @param  string $name
-	 * @return void
-	 */
+     * Reading data from properties.
+     *
+     * @param string $name
+     */
     public function __get($name)
     {
         if (isset($this->{$name})) {
             return $this->{$name};
         }
-        
-        return null;
+
+        return false;
     }
 
     /**
-     * Returns the result by format
+     * Returns the result by format.
      * 
-     * @param  string $format
+     * @param string $format
+     *
      * @return mixed
      */
     public function get($format)
@@ -194,7 +184,7 @@ class Result
     }
 
     /**
-     * Convert properties to json
+     * Convert properties to json.
      *
      * @return string
      */
@@ -204,7 +194,7 @@ class Result
     }
 
     /**
-     * Convert properties to array
+     * Convert properties to array.
      *
      * @return array
      */
@@ -214,7 +204,7 @@ class Result
     }
 
     /**
-     * Serialize properties
+     * Serialize properties.
      *
      * @return string
      */
@@ -224,7 +214,7 @@ class Result
     }
 
     /**
-     * Convert properties to xml by using SimpleXMLElement
+     * Convert properties to xml by using SimpleXMLElement.
      *
      * @return string
      */
@@ -232,7 +222,7 @@ class Result
     {
         $xml = new \SimpleXMLElement(
                 '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><parser></parser>');
-        
+
         $xml->addChild('fqdn', $this->fqdn);
         $xml->addChild('idn_fqdn', $this->idnFqdn);
         $xml->addChild('domain', $this->domain);
@@ -241,7 +231,7 @@ class Result
         $xml->addChild('idnTld', $this->idnTld);
         $xml->addChild('tldGroup', $this->tldGroup);
         $xml->addChild('validHostname', $this->validHostname);
-        
+
         return $xml->asXML();
     }
 }

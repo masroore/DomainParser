@@ -1,3 +1,8 @@
+### 2.0.6 (Jun 16, 2016)
+* replace Idna.php to mso/idna-convert package
+* change public suffixes url to publicsuffix.org 
+* small fixes and optimizations
+
 ### 2.0.2 (Jul 03, 2013)
 * rewritten mozilla domain name list parser (fix issue #1)
 * removed trailing spaces

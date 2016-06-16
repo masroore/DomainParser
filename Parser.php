@@ -1,6 +1,6 @@
 <?php
 /**
- * Novutec Domain Tools
+ * Novutec Domain Tools.
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -25,122 +25,99 @@
 namespace Novutec\DomainParser;
 
 /**
- * define DomainParser Path
- */
-define('DOMAINPARSERPATH', dirname(__FILE__));
-
-/**
- * @see IdnaConverter
- */
-require_once DOMAINPARSERPATH . '/Idna.php';
-
-/**
  * @see DomainParserResult
  */
-require_once DOMAINPARSERPATH . '/Result.php';
+require_once __DIR__.'/Result.php';
 
 /**
  * @see DomainParserException
  */
-require_once DOMAINPARSERPATH . '/Exception/AbstractException.php';
+require_once __DIR__.'/Exception/AbstractException.php';
 
 /**
- * DomainParser
+ * DomainParser.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
 class Parser
 {
-
     /**
      * Is the top-level domain list already be loaded?
      *
-     * @var boolean
-     * @access protected;
+     * @var bool
      */
     protected $loaded = false;
 
     /**
      * Should the exceptions be thrown or caugth and trapped in the response?
      *
-     * @var boolean
-     * @access protected
+     * @var bool
      */
     protected $throwExceptions = false;
 
     /**
      * Should the cache file always be loaded from the server?
      *
-     * @var boolean
-     * @access protected
+     * @var bool
      */
     protected $reload = false;
 
     /**
-     * Life time of cached file
+     * Life time of cached file.
      *
-     * @var integer
-     * @access protected
+     * @var int
      */
     protected $cacheTime = 432000;
 
     /**
-     * List of all top-level domain names
+     * List of all top-level domain names.
      *
      * @var array
-     * @access protected
      */
     protected $tldList = array();
 
     /**
-     * URL to top-level domain name list
+     * URL to top-level domain name list.
      *
      * @var string
-     * @access protected
      */
-    protected $tldUrl = 'http://mxr.mozilla.org/mozilla-central/source/netwerk/dns/effective_tld_names.dat?raw=1';
+    protected $tldUrl = 'https://publicsuffix.org/list/public_suffix_list.dat';
 
     /**
-     * Output format 'object', 'array', 'json', 'serialize' or 'xml'
+     * Output format 'object', 'array', 'json', 'serialize' or 'xml'.
      *
      * @var string
-     * @access protected
      */
     protected $format = 'object';
 
     /**
-     * Encoding of domain name
+     * Encoding of domain name.
      *
      * @var string
-     * @access protected
      */
     protected $encoding = 'utf-8';
 
     /**
-     * Set cache path
+     * Set cache path.
      *
      * @var string
-     * @access protected
      */
     protected $path;
 
-
     /**
-     * Custom list of additional domain groups / tlds
+     * Custom list of additional domain groups / tlds.
      *
      * @var array
      */
     protected $customDomains = array();
 
-
     /**
-     * Creates a DomainParser object
+     * Creates a DomainParser object.
      *
-     * @param  string $format
-     * @return void
+     * @param string $format
      */
     public function __construct($format = 'object', $path = null)
     {
@@ -149,10 +126,21 @@ class Parser
     }
 
     /**
-     * Set cache path
+     * Set output format.
      *
-     * @param  string $path
-     * @return void
+     * You may choose between 'object', 'array', 'json', 'serialize' or 'xml' output format
+     *
+     * @param string $format
+     */
+    public function setFormat($format = 'object')
+    {
+        $this->format = filter_var($format, FILTER_SANITIZE_STRING);
+    }
+
+    /**
+     * Set cache path.
+     *
+     * @param string $path
      */
     public function setCachePath($path = null)
     {
@@ -164,17 +152,17 @@ class Parser
     }
 
     /**
-     * Checks if given domain name is valid
+     * Checks if given domain name is valid.
      *
-     * @param  string $domain
-     * @return boolean
+     * @param string $domain
+     *
+     * @return bool
      */
     public function isValid($domain)
     {
         $this->setFormat('object');
-        $Result = $this->parse($domain, '');
 
-        return $Result->validHostname;
+        return $this->parse($domain, '')->validHostname;
     }
 
     /**
@@ -186,9 +174,11 @@ class Parser
      * Also skips given string if it is longer than 63 characters.
      *
      * @throws instance of AbstractException if throwExceptions = true
-     * @param  string $unparsedString
-     * @param  string $defaultTld
-     * @return void
+     *
+     * @param string $unparsedString
+     * @param string $defaultTld
+     *
+     * @return mixed
      */
     public function parse($unparsedString, $defaultTld = 'com')
     {
@@ -204,22 +194,22 @@ class Parser
             $matchedGroup = '';
             $validHostname = true;
 
-            $IdnaConverter = new Idna(array('idn_version' => 2008));
+            $IdnaConverter = new \Mso\IdnaConvert\IdnaConvert(array('idn_version' => 2008));
 
             preg_match('/^((http|https|ftp|ftps|news|ssh|sftp|gopher):[\/]{2,})?([^\/]+)/', mb_strtolower(trim($unparsedString), $this->encoding), $matches);
             $parsedString = $IdnaConverter->encode(end($matches));
 
             foreach ($this->tldList['content'] as $tldgroup => $tlds) {
                 foreach ($tlds as $tld) {
-                    if (preg_match('/\.' . $tld . '$/', $parsedString, $trash)) {
+                    if (preg_match('/\.'.$tld.'$/', $parsedString, $trash)) {
                         $matchedTld = $tld;
                         $matchedTldIdn = $IdnaConverter->encode($tld);
 
-                        $matchedDomain = str_replace('.' . $matchedTld, '', $parsedString);
+                        $matchedDomain = str_replace('.'.$matchedTld, '', $parsedString);
                         $matchedDomain = rtrim($matchedDomain, '.');
                         $matchedDomain = ltrim($matchedDomain, '.');
 
-                        if ($matchedTld != 'name' && strpos($matchedDomain, '.')) {
+                        if ($matchedTld !== 'name' && strpos($matchedDomain, '.')) {
                             $matchedDomain = str_replace('.', '', strrchr($matchedDomain, '.'));
                         }
 
@@ -244,17 +234,13 @@ class Parser
             }
 
             if ($matchedDomain == '' && strlen($matchedDomainIdn) <= 63 && $matchedTld == '') {
-                $matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function (
-                        $match) use(&$validHostname)
-                {
+                $matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function () use (&$validHostname) {
                     $validHostname = false;
                 }, $IdnaConverter->encode($parsedString)));
                 $matchedDomainIdn = $IdnaConverter->encode($matchedDomain);
                 $matchedTld = $matchedTldIdn = $defaultTld;
             } elseif ($matchedDomain != '' && strlen($matchedDomainIdn) <= 63 && $matchedTld != '') {
-                $matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function (
-                        $match) use(&$validHostname)
-                {
+                $matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function () use (&$validHostname) {
                     $validHostname = false;
                 }, $IdnaConverter->encode($matchedDomain)));
                 $matchedDomainIdn = $IdnaConverter->encode($matchedDomain);
@@ -265,8 +251,8 @@ class Parser
             }
 
             $Result = new Result($matchedDomain, $matchedDomainIdn,
-                    $IdnaConverter->decode($matchedTld), $matchedTldIdn, $matchedGroup,
-                    $validHostname);
+                $IdnaConverter->decode($matchedTld), $matchedTldIdn, $matchedGroup,
+                $validHostname);
         } catch (\Novutec\DomainParser\AbstractException $e) {
             if ($this->throwExceptions) {
                 throw $e;
@@ -280,15 +266,14 @@ class Parser
     }
 
     /**
-     * Checks if the domain list exists or cached time is reached
+     * Checks if the domain list exists or cached time is reached.
      *
      * @throws OpenFileErrorException
      * @throws WriteFileErrorException
-     * @return void
      */
     private function load()
     {
-        $filename = $this->path . '/domainparsertld.txt';
+        $filename = $this->path.'/domainparsertld.txt';
 
         if (file_exists($filename)) {
             $this->tldList = unserialize(file_get_contents($filename));
@@ -299,7 +284,7 @@ class Parser
             }
 
             // will reload tld list if changes to Additional.php have been made
-            if ($this->tldList['timestamp'] < filemtime(DOMAINPARSERPATH . '/Additional.php')) {
+            if ($this->tldList['timestamp'] < filemtime(__DIR__.'/Additional.php')) {
                 $this->reload = true;
             }
         }
@@ -307,7 +292,7 @@ class Parser
         // check connection - if there is no internet connection skip loading
         $existFile = file_exists($filename);
 
-        if (! $existFile || $this->reload === true) {
+        if (!$existFile || $this->reload === true) {
             $this->catchTlds($existFile);
             $file = fopen($filename, 'w+');
 
@@ -335,23 +320,24 @@ class Parser
      * The manual added list is not complete.
      *
      * @throws ConnectErrorException
+     *
      * @see Novutec\Additional.php $additional
-     * @param  boolean $existFile
-     * @return void
+     *
+     * @param bool $existFile
      */
     private function catchTlds($existFile)
     {
         $content = @file_get_contents($this->tldUrl);
 
         if ($content === false) {
-            if (! $existFile) {
+            if (!$existFile) {
                 throw \Novutec\DomainParser\AbstractException::factory('Connect', 'Could not catch file from server.');
             }
 
             return;
         }
 
-        $IdnaConverter = new Idna(array('idn_version' => 2008));
+        $IdnaConverter = new \Mso\IdnaConvert\IdnaConvert(array('idn_version' => 2008));
 
         // only match official ICANN domain tlds
         if (preg_match('/\/\/ ===BEGIN ICANN DOMAINS===(.*)(?=\/\/ ===END ICANN DOMAINS===)/s', $content, $matches) !== 1) {
@@ -364,12 +350,12 @@ class Parser
             $line = trim($line);
 
             // skip empty or comment lines
-            if ($line == '' || $line[0] == '/' || strpos($line, '!') !== false) {
+            if ($line == '' || $line[0] === '/' || strpos($line, '!') !== false) {
                 continue;
             }
 
             // reformat prefixed wildcards
-            if ($line[0] == '*') {
+            if ($line[0] === '*') {
                 $line = substr($line, 2);
             }
 
@@ -381,7 +367,7 @@ class Parser
             if ($pos === false) {
                 $match = $tld;
             } else {
-                $match = substr($tld, $pos+1);
+                $match = substr($tld, $pos + 1);
             }
 
             if (!isset($tlds[$match])) {
@@ -392,14 +378,13 @@ class Parser
         }
 
         // load additional to add to list
-        require_once 'Additional.php';
+        require_once __DIR__.'/Additional.php';
 
         // merge list and sort tlds by length within its group
         $this->tldList['content'] = array_merge_recursive($tlds, $additional);
 
         foreach ($this->tldList['content'] as $tldGroup => $tld) {
-            usort($tld, function ($a, $b)
-            {
+            usort($tld, function ($a, $b) {
                 return strlen($b) - strlen($a);
             });
 
@@ -410,23 +395,9 @@ class Parser
     }
 
     /**
-     * Set output format
+     * Set encoding of domain name.
      *
-     * You may choose between 'object', 'array', 'json', 'serialize' or 'xml' output format
-     *
-     * @param  string $format
-     * @return void
-     */
-    public function setFormat($format = 'object')
-    {
-        $this->format = filter_var($format, FILTER_SANITIZE_STRING);
-    }
-
-    /**
-     * Set encoding of domain name
-     *
-     * @param  string $encoding
-     * @return void
+     * @param string $encoding
      */
     public function setEncodng($encoding = 'utf-8')
     {
@@ -434,7 +405,7 @@ class Parser
     }
 
     /**
-     * Set the throwExceptions flag
+     * Set the throwExceptions flag.
      *
      * Set whether exceptions encounted during processing should be thrown
      * or caught and trapped in the response as a string message.
@@ -442,8 +413,7 @@ class Parser
      * Default behaviour is to trap them in the response; call this
      * method to have them thrown.
      *
-     * @param  boolean $throwExceptions
-     * @return void
+     * @param bool $throwExceptions
      */
     public function throwExceptions($throwExceptions = false)
     {
@@ -451,13 +421,12 @@ class Parser
     }
 
     /**
-     * Set the reload flag
+     * Set the reload flag.
      *
      * Set if the top-level domain list should be reloaded independet from
      * the cache time.
      *
-     * @param  boolean $reload
-     * @return void
+     * @param bool $reload
      */
     public function reload($reload = false)
     {
@@ -465,34 +434,31 @@ class Parser
     }
 
     /**
-     * Set the cache time
+     * Set the cache time.
      *
      * By default the cache time is 432000 (equal to 5 days)
      *
-     * @param  integer $cacheTime
-     * @return void
+     * @param int $cacheTime
      */
     public function cacheTime($cacheTime = 432000)
     {
         $this->cacheTime = filter_var($cacheTime, FILTER_VALIDATE_INT);
     }
 
-
     /**
      * Add a custom domain group. This will override the built-in domain groups.
      *
      * @param string $groupName
-     * @param array $tldList
+     * @param array  $tldList
      */
     public function addCustomDomainGroup($groupName, array $tldList)
     {
         $this->customDomains[$groupName] = $tldList;
     }
 
-
     /**
      * Set the custom domain groups. The array should be in the same format as in Additional.php.
-     * These will override the built-in domain groups
+     * These will override the built-in domain groups.
      *
      * @param array $domainGroups Array of domain groups and their tld lists
      */

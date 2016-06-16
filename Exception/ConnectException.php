@@ -1,6 +1,6 @@
 <?php
 /**
- * Novutec Domain Tools
+ * Novutec Domain Tools.
  * 
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
@@ -25,10 +25,10 @@
 namespace Novutec\DomainParser;
 
 /**
- * ConnectException
+ * ConnectException.
  *
  * @category   Novutec
- * @package    DomainParser
+ *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
