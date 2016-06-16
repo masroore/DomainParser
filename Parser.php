@@ -240,9 +240,9 @@ class Parser
                 $matchedDomainIdn = $IdnaConverter->encode($matchedDomain);
                 $matchedTld = $matchedTldIdn = $defaultTld;
             } elseif ($matchedDomain != '' && strlen($matchedDomainIdn) <= 63 && $matchedTld != '') {
-                $matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function () use (&$validHostname) {
-                    $validHostname = false;
-                }, $IdnaConverter->encode($matchedDomain)));
+                //$matchedDomain = $IdnaConverter->decode(preg_replace_callback('/[^a-zA-Z0-9\-\.]/', function () use (&$validHostname) {
+                //    $validHostname = false;
+                //}, $IdnaConverter->encode($matchedDomain)));
                 $matchedDomainIdn = $IdnaConverter->encode($matchedDomain);
             } elseif ($matchedDomain == '' && $matchedTld != '') {
                 $validHostname = false;
