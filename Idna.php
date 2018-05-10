@@ -788,6 +788,7 @@ class Idna
         foreach (self::$NP['replacemaps'] as $np_src => $np_target) {
             if ($np_target[0] != $input[0]) continue;
             if (count($np_target) != $inp_len) continue;
+            if (!is_array($np_target) || !($np_target instanceOf \Countable)) continue;
             $hit = false;
             foreach ($input as $k2 => $v2) {
                 if ($v2 == $np_target[$k2]) {
