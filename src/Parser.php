@@ -25,21 +25,6 @@
 namespace Novutec\DomainParser;
 
 /**
- * @see Idna
- */
-require_once __DIR__.'/Idna.php';
-
-/**
- * @see DomainParserResult
- */
-require_once __DIR__.'/Result.php';
-
-/**
- * @see DomainParserException
- */
-require_once __DIR__.'/Exception/AbstractException.php';
-
-/**
  * DomainParser.
  *
  * @category   Novutec
