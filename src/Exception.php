@@ -20,18 +20,18 @@
  */
 
 /**
- * @namespace Novutec\DomainParser
+ * @namespace Novutec\DomainParser\Exception
  */
 namespace Novutec\DomainParser;
 
 /**
- * OpenFileException.
+ * Exception.
  *
  * @category   Novutec
  *
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
-class OpenFileException extends AbstractException
+class Exception extends \Exception
 {
 }

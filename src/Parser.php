@@ -24,20 +24,10 @@
  */
 namespace Novutec\DomainParser;
 
-/**
- * @see Idna
- */
-require_once __DIR__.'/Idna.php';
-
-/**
- * @see DomainParserResult
- */
-require_once __DIR__.'/Result.php';
-
-/**
- * @see DomainParserException
- */
-require_once __DIR__.'/Exception/AbstractException.php';
+use Novutec\DomainParser\Exception\ConnectException;
+use Novutec\DomainParser\Exception\OpenFileException;
+use Novutec\DomainParser\Exception\UnparsableStringException;
+use Novutec\DomainParser\Exception\WriteFileException;
 
 /**
  * DomainParser.
@@ -178,7 +168,7 @@ class Parser
      *
      * Also skips given string if it is longer than 63 characters.
      *
-     * @throws instance of AbstractException if throwExceptions = true
+     * @throws Exception if throwExceptions = true
      *
      * @param string $unparsedString
      * @param string $defaultTld
@@ -252,13 +242,13 @@ class Parser
             } elseif ($matchedDomain == '' && $matchedTld != '') {
                 $validHostname = false;
             } else {
-                throw \Novutec\DomainParser\AbstractException::factory('UnparsableString', 'Unparsable domain name.');
+                throw new UnparsableStringException('Unparsable domain name.');
             }
 
             $Result = new Result($matchedDomain, $matchedDomainIdn,
                 $IdnaConverter->decode($matchedTld), $matchedTldIdn, $matchedGroup,
                 $validHostname);
-        } catch (\Novutec\DomainParser\AbstractException $e) {
+        } catch (\Novutec\DomainParser\Exception $e) {
             if ($this->throwExceptions) {
                 throw $e;
             }
@@ -273,8 +263,8 @@ class Parser
     /**
      * Checks if the domain list exists or cached time is reached.
      *
-     * @throws OpenFileErrorException
-     * @throws WriteFileErrorException
+     * @throws OpenFileException
+     * @throws WriteFileException
      */
     private function load()
     {
@@ -302,11 +292,11 @@ class Parser
             $file = fopen($filename, 'w+');
 
             if ($file === false) {
-                throw \Novutec\DomainParser\AbstractException::factory('OpenFile', 'Could not open cache file.');
+                throw new OpenFileException('Could not open cache file.');
             }
 
             if (fwrite($file, serialize($this->tldList)) === false) {
-                throw \Novutec\DomainParser\AbstractException::factory('WriteFile', 'Could not open cache file for writing.');
+                throw new WriteFileException('Could not open cache file for writing.');
             }
 
             fclose($file);
@@ -324,7 +314,7 @@ class Parser
      *
      * The manual added list is not complete.
      *
-     * @throws ConnectErrorException
+     * @throws ConnectException
      *
      * @see Novutec\Additional.php $additional
      *
@@ -336,7 +326,7 @@ class Parser
 
         if ($content === false) {
             if (!$existFile) {
-                throw \Novutec\DomainParser\AbstractException::factory('Connect', 'Could not catch file from server.');
+                throw new ConnectException('Could not catch file from server.');
             }
 
             return;
@@ -346,7 +336,7 @@ class Parser
 
         // only match official ICANN domain tlds
         if (preg_match('/\/\/ ===BEGIN ICANN DOMAINS===(.*)(?=\/\/ ===END ICANN DOMAINS===)/s', $content, $matches) !== 1) {
-            throw \Novutec\DomainParser\AbstractException::factory('UnparsableString', 'Could not fetch ICANN Domains of Mozilla TLD File.');
+            throw new UnparsableStringException('Could not fetch ICANN Domains of Mozilla TLD File.');
         }
 
         $tlds = array();
