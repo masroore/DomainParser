@@ -24,7 +24,7 @@
  */
 namespace Novutec\DomainParser\Exception;
 
-use Novutec\DomainParser\Exception;
+use Novutec\DomainParser\WriteFileException as BaseWriteFileException;
 
 /**
  * WriteFileException.
@@ -34,6 +34,6 @@ use Novutec\DomainParser\Exception;
  * @copyright  Copyright (c) 2007 - 2013 Novutec Inc. (http://www.novutec.com)
  * @license    http://www.apache.org/licenses/LICENSE-2.0
  */
-class WriteFileException extends Exception
+class WriteFileException extends BaseWriteFileException
 {
 }
