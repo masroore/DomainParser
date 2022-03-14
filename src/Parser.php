@@ -129,7 +129,7 @@ class Parser
      */
     public function setFormat($format = 'object')
     {
-        $this->format = filter_var($format, FILTER_SANITIZE_STRING);
+        $this->format = filter_var($format, FILTER_UNSAFE_RAW);
     }
 
     /**
@@ -142,7 +142,7 @@ class Parser
         if (is_null($path)) {
             $this->path = sys_get_temp_dir();
         } else {
-            $this->path = filter_var($path, FILTER_SANITIZE_STRING);
+            $this->path = filter_var($path, FILTER_UNSAFE_RAW);
         }
     }
 
@@ -396,7 +396,7 @@ class Parser
      */
     public function setEncodng($encoding = 'utf-8')
     {
-        $this->encoding = filter_var($encoding, FILTER_SANITIZE_STRING);
+        $this->encoding = filter_var($encoding, FILTER_UNSAFE_RAW);
     }
 
     /**
